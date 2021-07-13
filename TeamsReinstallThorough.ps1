@@ -1,37 +1,16 @@
 ##### Script based on the great works of XSIOL. #####
 ##### Formatting, commenting, modifications and merging of the scripts done by TOBKO. #####
+##### Mod to unantended remote reinstallation by ALMAZ ####
 
-##################################
-##################################
-#####      Initiation        #####
-#####    By XSIOL & TOBKO    #####
-##################################
-##################################
+#Prepping variables for remote invoke
+$pcname=Read-Host "Enter PC Name"
+$logonuser=Get-WmiObject -ComputerName $pcname -Class Win32_ComputerSystem | Select-Object UserName
+$sam=$logonuser.UserName.split('\')[1]
+$rENVLAD="c:\users\$sam\localappdata"
+$rENVAD="c:\Users\$sam\AppData\Roaming"
+$rENVUP="c:\users\$sam"
 
-$challenge = Read-Host "Are you sure you wish to completely reinstall Microsoft Teams? 
-This will also close Internet Explorer, Chrome & Edge (Y/N)"
-$challenge = $challenge.ToUpper()
 
-# Check if user wrote YES/NO
-if ($challenge.Length -gt 1){
-    if ($challenge -eq "NO"){
-        $challenge = "N"
-    }
-    
-    elseif ($challenge -eq "YES"){
-        $challenge = "Y"
-    }
-
-    else{
-    }
-}
-
-if ($challenge -eq "N"){
-    Stop-Process -Id $PID
-}
-
-elseif ($challenge -eq "Y"){
-    
     ##################################
     ##################################
     ##### Teams Uninstall Script #####
