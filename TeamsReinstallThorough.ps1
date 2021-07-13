@@ -2,6 +2,21 @@
 ##### Formatting, commenting, modifications and merging of the scripts done by TOBKO. #####
 ##### Mod to unantended remote reinstallation by ALMAZ ####
 
+$ErrorActionPreference="SilentlyContinue"
+$ConfirmPreference="False"
+#Admin check
+$pc_name = Read-Host -Prompt "Enter PC Name" 
+$user = "$env:USERNAME";
+$group = "Administrators";
+$groupObj =[ADSI]"WinNT://$pc_name/$group,group" 
+$membersObj = @($groupObj.psbase.Invoke("Members")) 
+$members = ($membersObj | ForEach-Object {$_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)})
+If ($members -contains $user) {
+      Write-Host "$user is admin on $pc_name"
+ } Else {
+        Write-Host "$user is not admin on $pc_name"
+        exit 
+}
 #Prepping variables for remote invoke
 $pcname=Read-Host "Enter PC Name"
 $logonuser=Get-WmiObject -ComputerName $pcname -Class Win32_ComputerSystem | Select-Object UserName
@@ -22,7 +37,7 @@ $rENVUP="c:\users\$sam"
     Write-Host "Stopping Teams Process" -ForegroundColor Yellow
 
     try{
-        Get-Process -ProcessName Teams -ErrorAction SilentlyContinue | Stop-Process -Force
+        Get-Process -ProcessName Teams  | Stop-Process -Force
         Start-Sleep -Seconds 3
         Write-Host "Teams Process Sucessfully Stopped" -ForegroundColor Green
     }
@@ -62,14 +77,14 @@ $rENVUP="c:\users\$sam"
     Write-Host "Clearing Teams Disk Cache" -ForegroundColor Yellow
     
     try{
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\application cache\cache" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\blob_storage" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\databases" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\cache" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\gpucache" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Indexeddb" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Local Storage" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\tmp" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\application cache\cache"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\blob_storage"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\databases"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\cache"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\gpucache"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Indexeddb"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\Local Storage"  | Remove-Item  
+        Get-ChildItem -Path $env:APPDATA\"Microsoft\teams\tmp"  | Remove-Item  
         Write-Host "Teams Disk Cache Cleaned" -ForegroundColor Green
     }
     
@@ -80,7 +95,7 @@ $rENVUP="c:\users\$sam"
     Write-Host "Stopping Chrome Process" -ForegroundColor Yellow
 
     try{
-        Get-Process -ProcessName Chrome -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+        Get-Process -ProcessName Chrome  | Stop-Process -Force 
         Start-Sleep -Seconds 3
         Write-Host "Chrome Process Sucessfully Stopped" -ForegroundColor Green
     }
@@ -92,9 +107,9 @@ $rENVUP="c:\users\$sam"
     Write-Host "Clearing Chrome Cache" -ForegroundColor Yellow
     
     try{
-        Get-ChildItem -Path $env:LOCALAPPDATA"\Google\Chrome\User Data\Default\Cache" -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:LOCALAPPDATA"\Google\Chrome\User Data\Default\Cookies" -File -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $env:LOCALAPPDATA"\Google\Chrome\User Data\Default\Web Data" -File -ErrorAction SilentlyContinue | Remove-Item -Confirm:$false -ErrorAction SilentlyContinue
+        Get-ChildItem -Path $env:LOCALAPPDATA"\Google\Chrome\User Data\Default\Cache"  | Remove-Item  
+        Get-ChildItem -Path $env:LOCALAPPDATA"\Google\Chrome\User Data\Default\Cookies" -File  | Remove-Item  
+        Get-ChildItem -Path $env:LOCALAPPDATA"\Google\Chrome\User Data\Default\Web Data" -File  | Remove-Item  
         Write-Host "Chrome Cleaned" -ForegroundColor Green
     }
     
@@ -105,9 +120,9 @@ $rENVUP="c:\users\$sam"
     Write-Host "Stopping IE Process" -ForegroundColor Yellow
     
     try{
-        Get-Process -ProcessName MicrosoftEdge -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-        Get-Process -ProcessName MSEdge -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-        Get-Process -ProcessName IExplore -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+        Get-Process -ProcessName MicrosoftEdge  | Stop-Process -Force 
+        Get-Process -ProcessName MSEdge  | Stop-Process -Force 
+        Get-Process -ProcessName IExplore  | Stop-Process -Force 
         Write-Host "Internet Explorer and Edge Processes Sucessfully Stopped" -ForegroundColor Green
     }
     
