@@ -1,24 +1,23 @@
 ##### Script based on the great works of XSIOL. #####
 ##### Formatting, commenting, modifications and merging of the scripts done by TOBKO. #####
-##### Mod to unantended remote reinstallation by ALMAZ ####
+##### Mod to unattended remote reinstallation by ALMAZ ####
 
 $ErrorActionPreference="SilentlyContinue"
 $ConfirmPreference="False"
 #Admin check
-$pc_name = Read-Host -Prompt "Enter PC Name" 
+$pcname = Read-Host -Prompt "Enter PC Name" 
 $user = "$env:USERNAME";
 $group = "Administrators";
-$groupObj =[ADSI]"WinNT://$pc_name/$group,group" 
+$groupObj =[ADSI]"WinNT://$pcname/$group,group" 
 $membersObj = @($groupObj.psbase.Invoke("Members")) 
 $members = ($membersObj | ForEach-Object {$_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)})
 If ($members -contains $user) {
-      Write-Host "$user is admin on $pc_name"
+      Write-Host "$user is admin on $pcname"
  } Else {
-        Write-Host "$user is not admin on $pc_name"
+        Write-Host "$user is not admin on $pcname"
         exit 
 }
 #Prepping variables for remote invoke
-$pcname=Read-Host "Enter PC Name"
 $logonuser=Get-WmiObject -ComputerName $pcname -Class Win32_ComputerSystem | Select-Object UserName
 $sam=$logonuser.UserName.split('\')[1]
 $rENVLAD="c:\users\$sam\localappdata"
